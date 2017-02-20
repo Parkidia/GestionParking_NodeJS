@@ -1,0 +1,17 @@
+{
+    "name": "parkidia_node",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "start": "node index.js"
+    },
+    "dependencies": {
+        "get-pixels": "latest",
+        "request": "latest",
+        "sleep": "latest",
+        "deasync": "latest"
+    },
+    "author": "Paul PAGES, Matthieu BRAVO, Guillaume BERNARD, Maxime BRUGEL",
+    "license": "Apache License 2.0",
+    "repository": "https://github.com/Parkidia/GestionParking_NodeJS"
+}

@@ -1,0 +1,20 @@
+[
+    {
+        "nom": "P01",
+        "minX": 0,
+        "minY": 0,
+        "maxX": 100,
+        "maxY": 100,
+        "dispo": true,
+        "couleurVoiture": null
+    },
+    {
+        "nom": "P02",
+        "minX": 100,
+        "minY": 100,
+        "maxX": 200,
+        "maxY": 200,
+        "dispo": true,
+        "couleurVoiture": null
+    }
+]
