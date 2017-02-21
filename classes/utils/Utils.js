@@ -41,6 +41,16 @@ module.exports = {
     },
 
     /**
+     * Créé un flot de lecture pour le fichier dont le chemin est passé en
+     * argument et le retourne.
+     * @param fichier le chemin du fichier.
+     * @return le flot de lecture créé.
+     */
+    "flotLecture": function (fichier) {
+        return FS.createReadStream(fichier);
+    },
+
+    /**
      * Ecrit dans un fichier dont le chemin est passé en argument.
      * @param fichier le chemin du fichier.
      * @param donnees les données à écrire.

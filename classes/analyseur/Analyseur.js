@@ -167,6 +167,10 @@ module.exports = class Analyseur {
 
         console.log("Fin de l'analyse");
         console.log("Durée : " + Math.abs(new Date().getTime() - prec) + " ms");
+
+        // Envoie une photo au serveur.
+        this.envoyerPhoto();
+
         console.log("Attente avant la prochaine analyse ...");
 
         // On attend.
@@ -307,5 +311,43 @@ module.exports = class Analyseur {
                     console.log("Statut envoyé !");
                 }
             });
+    }
+
+    /**
+     * Prend une photo du parking et l'envoie au serveur JEE.
+     */
+    envoyerPhoto() {
+        // Prend une photo.
+        while (!Utils.prendrePhoto(Constantes.IMAGE_PREVIEW)) {
+            console.error(
+                "Impossible de prendre la photo " +
+                Constantes.IMAGE_PREVIEW);
+        }
+
+        // Lis la photo prise.
+
+        // Créé les data à envoyer.
+        let data = {
+            image: {
+                value: Utils.flotLecture(Constantes.IMAGE_PREVIEW),
+                contentType: "image/png"
+            }
+        };
+
+        // Envoie
+        Request.post({
+            url: Constantes.SERVEUR_JEE + "parking/photo/"
+                 + Constantes.ID_PARKING,
+            formDate: data
+        }, (error, response, body) => {
+            if (error) {
+                console.error("Impossible de se connecter au serveur");
+            } else if (response.statusCode != 200) {
+                console.error(
+                    "Code " + response.statusCode + " : " + body);
+            } else {
+                console.log("Image envoyé !");
+            }
+        });
     }
 };
