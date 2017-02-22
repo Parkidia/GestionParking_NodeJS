@@ -54,6 +54,12 @@ module.exports = {
     /** Temps d'attente entre chaque analyse (en ms). */
     TEMPS_ATTENTE: 5,
 
+    /**
+     * Le temps qui doit passer entre l'envoie de chaque photo
+     * au serveur JEE.
+     */
+    TEMPS_ENTRE_ENVOIE_PHOTO: 30,
+
     /** Format dans leqel la photo est prise. */
     FORMAT_PRISE_PHOTO: "png",
 

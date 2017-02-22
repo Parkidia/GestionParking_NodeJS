@@ -27,6 +27,7 @@ module.exports = class Analyseur {
 
     /** Créé un nouvel analyseur. */
     constructor() {
+        this.dernierEnvoiePhoto = null;
     }
 
     /**
@@ -165,11 +166,22 @@ module.exports = class Analyseur {
         Utils.renommerFichier(Constantes.IMAGE_ANALYSE,
                               Constantes.IMAGE_REFERENCE);
 
-        console.log("Fin de l'analyse");
-        console.log("Durée : " + Math.abs(new Date().getTime() - prec) + " ms");
-
         // Envoie une photo au serveur.
-        this.envoyerPhoto();
+        let maintenant = new Date().getTime();
+
+        console.log("Fin de l'analyse");
+        console.log("Durée : " + Math.abs(maintenant - prec) + " ms");
+
+        /*
+         * On envoie la mise à jour de la photo tous
+         * les TEMPS_ENTRE_ENVOIE_PHOTO.
+         */
+        if (this.dernierEnvoiePhoto == null ||
+            (maintenant - this.dernierEnvoiePhoto)
+                >= Constantes.TEMPS_ENTRE_ENVOIE_PHOTO * 60000) {
+            this.envoyerPhoto();
+            this.dernierEnvoiePhoto = maintenant;
+        }
 
         console.log("Attente avant la prochaine analyse ...");
 
