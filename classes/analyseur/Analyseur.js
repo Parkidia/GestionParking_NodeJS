@@ -363,7 +363,9 @@ module.exports = class Analyseur {
         let data = {
             image: {
                 value: Utils.flotLecture(Constantes.IMAGE_PREVIEW),
-                contentType: "image/png"
+                options: {
+                    contentType: "image/png"
+                }
             }
         };
 
@@ -371,7 +373,7 @@ module.exports = class Analyseur {
         Request.post({
             url: Constantes.SERVEUR_JEE + "parking/photo/"
                  + Constantes.ID_PARKING + "/" + Constantes.CLE_PARKING,
-            formDate: data
+            formData: data
         }, (error, response, body) => {
             if (error) {
                 console.error("Impossible de se connecter au serveur");
