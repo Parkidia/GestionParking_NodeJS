@@ -46,13 +46,19 @@ module.exports = {
      * Angle en degrès pour tourner l'image prise afin
      * de coller au mieux aux places.
      */
-    ROTATION_IMAGE: 3,
+    ROTATION_IMAGE: 4,
 
     /** Le temps de prise d'une photo (en ms). */
     TEMPS_PRISE_PHOTO: 1000,
 
     /** Temps d'attente entre chaque analyse (en ms). */
     TEMPS_ATTENTE: 5,
+
+    /**
+     * Le temps qui doit passer entre l'envoie de chaque photo
+     * au serveur JEE (en min).
+     */
+    TEMPS_ENTRE_ENVOIE_PHOTO: 30,
 
     /** Format dans leqel la photo est prise. */
     FORMAT_PRISE_PHOTO: "png",
@@ -67,7 +73,7 @@ module.exports = {
     ADRESSE_SERVEUR: "localhost",
 
     /** Adresse du serveur JEE. */
-    SERVEUR_JEE: "http://192.168.1.11:8080/GestionParking_war_exploded/",
+    SERVEUR_JEE: "http://192.168.1.11:8080/GestionParking_war_exploded/rest/",
 
     /** Clé autorisant ce Raspberry à modifier l'état de ce parking. */
     CLE_PARKING: "6ede19b4-eb23-4fba-a42a-7514caaa1a6f",

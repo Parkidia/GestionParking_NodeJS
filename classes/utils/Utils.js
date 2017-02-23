@@ -105,7 +105,7 @@ module.exports = {
             CameraLibre = true;
 
             // Retourne le statut.
-            return statut !== "0";
+            return statut == "0";
         } else {
             return false;
         }
@@ -121,7 +121,7 @@ module.exports = {
                 "convert", "-rotate", Constantes.ROTATION_IMAGE,
                 "-background", "black",
                 "-fill", "black", photo, photo
-            ]).status == 0
+            ]).status == "0"
     },
 
     /**

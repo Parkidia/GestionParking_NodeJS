@@ -27,6 +27,9 @@ module.exports = class Analyseur {
 
     /** Créé un nouvel analyseur. */
     constructor() {
+
+        // Date de la denière photo envoyée au serveur JEE.
+        this.dernierePhotoEnvoyee = null;
     }
 
     /**
@@ -50,6 +53,12 @@ module.exports = class Analyseur {
                 "Impossible de prendre la photo " + Constantes.IMAGE_REFERENCE);
         }
 
+        // Tourne l'image.
+        while (!Utils.tournerPhoto(Constantes.IMAGE_REFERENCE)) {
+            console.error(
+                "Impossible de tourner la photo " + Constantes.IMAGE_REFERENCE);
+        }
+
         console.log("Initialisation terminée");
     }
 
@@ -67,6 +76,12 @@ module.exports = class Analyseur {
         while (!Utils.prendrePhoto(Constantes.IMAGE_ANALYSE)) {
             console.error(
                 "Impossible de prendre la photo " + Constantes.IMAGE_ANALYSE);
+        }
+
+        // Tourne l'image.
+        while (!Utils.tournerPhoto(Constantes.IMAGE_ANALYSE)) {
+            console.error(
+                "Impossible de tourner la photo " + Constantes.IMAGE_ANALYSE);
         }
 
         console.log(Constantes.IMAGE_ANALYSE + " a été prise.");
@@ -102,6 +117,13 @@ module.exports = class Analyseur {
                         Constantes.IMAGE_ANALYSE);
                 }
 
+                // Tourne l'image.
+                while (!Utils.tournerPhoto(Constantes.IMAGE_ANALYSE)) {
+                    console.error(
+                        "\tImpossible de tourner la photo " +
+                        Constantes.IMAGE_ANALYSE);
+                }
+
                 // Compare la photo à analyser avec la photo intermédiaire.
                 let compInterAnalyse = this.comparer(
                     Constantes.IMAGE_INTERMEDIAIRE,
@@ -120,7 +142,8 @@ module.exports = class Analyseur {
                      * => on effectue la mise à jour des places.
                      */
                     if (reCompRefAnalyse.length != 0) {
-                        console.log("\tChangement ! Mise à jour des places ...");
+                        console.log(
+                            "\tChangement ! Mise à jour des places ...");
 
                         // Pour toutes les places qui ont changées.
                         for (let changement of reCompRefAnalyse) {
@@ -137,7 +160,8 @@ module.exports = class Analyseur {
                         // On sauvegarde le changement dans le fichier.
                         Utils.ecrireFichier(Constantes.FICHIER_PLACES,
                                             JSON.stringify(
-                                                this.parking.getPlaces));
+                                                this.parking.getPlaces,
+                                                null, 4));
 
                         // La photo à analyser devien celle de référence.
                         Utils.renommerFichier(Constantes.IMAGE_ANALYSE,
@@ -161,15 +185,26 @@ module.exports = class Analyseur {
             }
         }
 
+        // Maintenant.
+        let maintenant = new Date().getTime();
+
         // L'image analysée devient celle de référence.
         Utils.renommerFichier(Constantes.IMAGE_ANALYSE,
                               Constantes.IMAGE_REFERENCE);
 
         console.log("Fin de l'analyse");
-        console.log("Durée : " + Math.abs(new Date().getTime() - prec) + " ms");
+        console.log("Durée : " + Math.abs(maintenant - prec) + " ms");
 
-        // Envoie une photo au serveur.
-        this.envoyerPhoto();
+        /*
+         * On envoie la mise à jour de la photo tous
+         * les TEMPS_ENTRE_ENVOIE_PHOTO.
+         */
+        if (this.dernierEnvoiePhoto == null ||
+            (maintenant - this.dernierEnvoiePhoto)
+                >= Constantes.TEMPS_ENTRE_ENVOIE_PHOTO * 60000) {
+            this.envoyerPhoto();
+            this.dernierEnvoiePhoto = maintenant;
+        }
 
         console.log("Attente avant la prochaine analyse ...");
 
@@ -324,8 +359,6 @@ module.exports = class Analyseur {
                 Constantes.IMAGE_PREVIEW);
         }
 
-        // Lis la photo prise.
-
         // Créé les data à envoyer.
         let data = {
             image: {
@@ -337,7 +370,7 @@ module.exports = class Analyseur {
         // Envoie
         Request.post({
             url: Constantes.SERVEUR_JEE + "parking/photo/"
-                 + Constantes.ID_PARKING,
+                 + Constantes.ID_PARKING + "/" + Constantes.CLE_PARKING,
             formDate: data
         }, (error, response, body) => {
             if (error) {
